@@ -1,4 +1,5 @@
 require "csv"
+require "time"
 require "./models/Person"
 require "./models/Shift"
 
@@ -6,17 +7,15 @@ class HourlistCsvParser
     def initialize(file_contents)
         @csv_content = CSV.parse(file_contents, headers: true)
         @unique_persons = []
+        @shift_dates = []
+        @calendar_dates = []
     end
 
     def monthly_wages
         @csv_content.each.map { |row| unique_persons(row) }
         @unique_persons = @unique_persons.uniq { |person| person.person_id }
         @unique_persons.each { |person| get_all_employee_info(person) }
-        log_wages()
-        # Iterate through person shifts
-        # Display wages for each month
-        # Create log headline. Ex.: Monthly Wages 03/2014:
-        
+        log_wages()        
     end
 
     private 
@@ -45,17 +44,17 @@ class HourlistCsvParser
     end
 
     def log_wages
-        create_headline_log()
+        @unique_persons.each { |person| get_dates(person) }
+        @calendar_dates.each { |calendar_date| create_log(calendar_date)  }
     end
 
-    def create_headline_log
-        @unique_persons.each { |person| get_headline_date(person) }
+    def get_dates(person)
+        person.shifts.each { |shift| @shift_dates << shift.date  }
+        @shift_dates.each { |date| @calendar_dates << Time.parse(date).strftime("%m/%Y") }
+        @calendar_dates = @calendar_dates.uniq
     end
 
-    def get_headline_date(person)
-        # get date
-        shift_dates = []
-        person.shifts.each { |shift| shift_dates << shift.date  }
-        puts shift_dates
+    def create_log(calendar_date)
+        puts "Monthly Wages #{calendar_date}:"
     end
 end
