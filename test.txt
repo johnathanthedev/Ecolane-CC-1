@@ -72,17 +72,17 @@ class HourlistCsvParser
 
         if worked_on_calendar_date 
             person.shifts.each do |shift|
-                started_during_evening = shift.start_time.between?(Wage::EVENING_WAGE_START, Wage::EVENING_WAGE_END)
+                puts started_during_evening = shift.start_time.between?(Wage::EVENING_WAGE_START, Wage::EVENING_WAGE_END)
                 started_after_evening = shift.start_time >= Wage::EVENING_WAGE_END
-                started_during_regular_hours = shift.start_time.between?(Wage::REGULAR_WAGE_START, Wage::REGULAR_WAGE_END)
-                started_after_regular_hours = shift.start_time >= Wage::REGULAR_WAGE_END
+                # started_during_regular_hours = shift.start_time.between?(Wage::REGULAR_WAGE_START, Wage::REGULAR_WAGE_END)
+                # started_after_regular_hours = shift.start_time >= Wage::REGULAR_WAGE_END
 
                 evening_check(started_during_evening, started_after_evening, shift, person)
-                non_evening_check(started_during_regular_hours, started_after_regular_hours, shift, person)
+                # non_evening_check(started_during_regular_hours, started_after_regular_hours, shift, person)
             end
 
-            formatted_earnings = sprintf("%.2f", person.earnings)
-            puts formatted_earnings
+            # formatted_earnings = sprintf("%.2f", person.earnings)
+            # puts person.earnings
         end
     end
 
@@ -92,8 +92,10 @@ class HourlistCsvParser
             formatted_end_time = create_formatted_end_time(shift)
 
             difference_in_hours = (((formatted_end_time - formatted_starting_time) * 24 * 60 * 60 ).to_i / 3600).abs # No negatives
+            puts difference_in_hours
             person.evening_hours_worked += difference_in_hours
             non_rounded_earnings = person.evening_hours_worked * Wage::EVENING_HOURLY_WAGE
+            # puts non_rounded_earnings
             person.earnings += non_rounded_earnings
         end 
     end
@@ -136,7 +138,7 @@ class HourlistCsvParser
             difference_in_hours = (((formatted_end_time - formatted_starting_time) * 24 * 60 * 60 ).to_i / 3600).abs # No negatives
             person.non_evening_hours_worked += difference_in_hours
             non_rounded_earnings = person.non_evening_hours_worked * Wage::REGULAR_HOURLY_WAGE
-            person.earnings += non_rounded_earnings
+            # person.earnings += non_rounded_earnings
         end 
     end
 end
