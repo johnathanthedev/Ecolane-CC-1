@@ -5,10 +5,10 @@
 
 ## Download Dependencies
 ```
-$ bundle install
+bundle install
 ```
 
 ## Import Employee Data
 ```
-$ HOURLIST_CSV_FILE="data/HourList201403.csv" bundle exec rake employees:import_hourlist_csv
+HOURLIST_CSV_FILE="data/HourList201403.csv" bundle exec rake employees:import_hourlist_csv
 ```
