@@ -12,6 +12,5 @@ namespace :employees do
         file_data = open(filename).read
         hour_list_service = HourListService.new()
         monthly_wages = hour_list_service.get_monthly_wages(file_data)
-        # p monthly_wages
     end
 end
